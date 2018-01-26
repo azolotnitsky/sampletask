@@ -21,29 +21,44 @@ public class OvenDao extends BasicDao<Oven> {
     private SessionFactory sessionFactory;
 
 
-    public int registerDevice(int devicenumber) {
+    public int registerDevice(long id, int deviceNumber) {
         Session session = null;
         int result = 0;
         try {
             session = sessionFactory.openSession();
-            result = session.createQuery("insert into DeviceRegsitry (devicenumber) VALUES (:devicenumber)").executeUpdate();
+
+            session.beginTransaction();
+            Oven oven = new Oven();
+            oven.setId(id);
+            oven.setDeviceNumber(deviceNumber);
+            oven.setMode(Oven.Mode.SWITCHEDOFF);
+            oven.setTemperature(10);
+
+            // Save the invitation to database
+            session.save(oven);
+
+            // Commit the transaction
+            session.getTransaction().commit();
+
+            //result = session.createQuery("insert into DeviceRegsitry (devicenumber) VALUES (:devicenumber)").executeUpdate();
         } catch(HibernateException e) {
             LOG.error("HibernateException in OvenDao.registerDevice()", e);
         } finally {
             if(session != null) session.close();
         }
 
-        return result;
+        return 1;
     }
 
-    public int changeTemperature(double delta) {
+    public int changeTemperature(int id, double delta) {
         Session session = null;
         int result = 0;
         try {
             session = sessionFactory.openSession();
-            Query query = session.createQuery("update Temperature t set t.degrees = t.degrees + :delta");
-            query.setParameter("delta", delta);
-            result = query.executeUpdate();
+            Oven oven = session.get(Oven.class, id);
+            oven.changeTemperature(delta);
+            session.saveOrUpdate(oven);
+            session.getTransaction().commit();
 
         } catch(HibernateException e) {
             LOG.error("HibernateException in OvenDao.changeTemperature()", e);
@@ -51,17 +66,18 @@ public class OvenDao extends BasicDao<Oven> {
             if(session != null) session.close();
         }
 
-        return result;
+        return 1;
     }
 
-    public int setMode(Oven.Mode newmode) {
+    public int setMode(int id, Oven.Mode newmode) {
         Session session = null;
         int result = 0;
         try {
             session = sessionFactory.openSession();
-            Query query = session.createQuery("update Mode (mode) VALUES (:newmode)");
-            query.setParameter("mode", newmode);
-            result = query.executeUpdate();
+            Oven oven = session.get(Oven.class, id);
+            oven.setMode(newmode);
+            session.saveOrUpdate(oven);
+            session.getTransaction().commit();
 
         } catch(HibernateException e) {
             LOG.error("HibernateException in OvenDao.setMode()", e);
@@ -69,7 +85,7 @@ public class OvenDao extends BasicDao<Oven> {
             if(session != null) session.close();
         }
 
-        return result;
+        return 1;
     }
 
 

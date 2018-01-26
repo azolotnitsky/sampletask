@@ -28,13 +28,33 @@ public class Oven {
         this.temperature = temperature;
     }
 
+    public void changeTemperature(double delta) {
+        this.temperature += delta;
+    }
+
+    public int getDeviceNumber() {
+        return deviceNumber;
+    }
+
+    public void setDeviceNumber(int deviceNumber) {
+        this.deviceNumber = deviceNumber;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
     @Column(name = "devicenumber")
-    private int devicenumber;
+    private int deviceNumber;
 
     @Column(name = "mode")
     private Mode mode;

@@ -15,12 +15,12 @@ public class OvenService {
     private static final String FAILURE_RESULT="<result>failure</result>";
 
     @POST
-    @Path("/register/{a}")
+    @Path("/register/{a}/{b}")
     @Produces(MediaType.APPLICATION_XML)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String registerDevice(int devicenumber) {
+    public String registerDevice(@FormParam("id") long id, @FormParam("devicenumber") int devicenumber) {
 
-        int result = ovenDao.registerDevice(devicenumber);
+        int result = ovenDao.registerDevice(id, devicenumber);
         if(result == 1){
             return SUCCESS_RESULT;
         }
@@ -28,12 +28,12 @@ public class OvenService {
     }
 
     @POST
-    @Path("/changeTemperature/{a}")
+    @Path("/changeTemperature/{a}/{b}")
     @Produces(MediaType.APPLICATION_XML)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String changeTemperature(double delta) {
+    public String changeTemperature(@FormParam("id") int id, @FormParam("delta") double delta) {
 
-        int result = ovenDao.changeTemperature(delta);
+        int result = ovenDao.changeTemperature(id, delta);
 
         if(result == 1){
             return SUCCESS_RESULT;
@@ -41,12 +41,12 @@ public class OvenService {
         return FAILURE_RESULT;    }
 
     @POST
-    @Path("/setMode/{a}")
+    @Path("/setMode/{a}/{b}")
     @Produces(MediaType.APPLICATION_XML)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public String setMode(@FormParam("mode") Oven.Mode newmode) {
+    public String setMode(@FormParam("id") int id, @FormParam("mode") Oven.Mode newmode) {
 
-        int result = ovenDao.setMode(newmode);
+        int result = ovenDao.setMode(id, newmode);
         if(result == 1){
             return SUCCESS_RESULT;
         }
