@@ -40,7 +40,6 @@ public class OvenDao extends BasicDao<Oven> {
             // Commit the transaction
             session.getTransaction().commit();
 
-            //result = session.createQuery("insert into DeviceRegsitry (devicenumber) VALUES (:devicenumber)").executeUpdate();
         } catch(HibernateException e) {
             LOG.error("HibernateException in OvenDao.registerDevice()", e);
         } finally {
